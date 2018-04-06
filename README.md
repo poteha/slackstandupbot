@@ -37,3 +37,9 @@ dev:
   DB_USER: 
   DB_PASSWORD: 
 ```
+
+
+## Deploy
+`zappa deploy dev`
+
+`zappa update dev`

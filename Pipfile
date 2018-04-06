@@ -9,10 +9,10 @@ name = "pypi"
 
 django = "*"
 djangorestframework = "*"
-"psycopg2" = "*"
 zappa = "*"
 slackclient = "*"
 slackeventsapi = "*"
+"psycopg2-binary" = "*"
 
 
 [dev-packages]
