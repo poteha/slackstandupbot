@@ -106,7 +106,6 @@ venv.bak/
 .mypy_cache/
 
 /slack/settings/settings.yml
-slack/settings/base.py
 slack/settings/settings.yml
 templates/
 
