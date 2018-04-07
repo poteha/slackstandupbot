@@ -1,13 +1,14 @@
 Simple daily standup async bot for remote teams who use Slack.
-Made with `Django`, `AWS Lambda` and [zappa](https://github.com/Miserlou/Zappa) framework.
 --------
+Made with `Django`, `AWS Lambda` and [zappa](https://github.com/Miserlou/Zappa) framework.
 
+#### How it looks like?
 
-*How it looks like?*
 ![Standup demo](https://media.giphy.com/media/XIFHNMZv3Y4EreMsy7/giphy.gif)
 
 
-*How the result looks like?*
+#### How the result looks like?
+
 ![Standup result](https://media.giphy.com/media/eBfokbeWeANx4GoQRk/giphy.gif)
 
 
