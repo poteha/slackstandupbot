@@ -110,3 +110,5 @@ slack/settings/settings.yml
 templates/
 
 .idea/
+scheduler.zip
+local.yml

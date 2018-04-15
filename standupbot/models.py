@@ -37,6 +37,7 @@ class User(AbstractModel):
     slack_id = models.TextField(unique=True)
     channel_id = models.TextField(unique=True, null=True, blank=True)
     is_active = models.BooleanField()
+    name = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.slack_id

@@ -7,6 +7,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from slackclient import SlackClient
+from rest_framework.decorators import api_view
+
 
 from .models import Question, Answer, User
 
@@ -24,20 +26,25 @@ SLACK_SEND_IM_METHOD = 'chat.postMessage'
 slack_client = SlackClient(SLACK_BOT_USER_TOKEN)
 
 
+@api_view(['GET', 'POST'])
+def health_check(request):
+    return Response({"message": "It works!"}, status=status.HTTP_200_OK)
+
+
 def send_message(channel, text, attachments=None):
     slack_client.api_call(method=SLACK_SEND_IM_METHOD,
                           channel=channel,
                           attachments=attachments,
                           text=text)
 
-
-def send_first_question_to_all_users():
+@api_view(['GET'])
+def send_first_question_to_all_users(request):
     users = User.objects.filter(is_active=True)
     first_question = Question.objects.order_by('order_number').first()
     for u in users:
         send_message(channel=u.channel_id, text=TEXT_NEW_DAY)
         send_message(channel=u.channel_id, text='*{}*'.format(first_question.text))
-    return {'response': 'ok'}
+    return Response({'response': 'ok'}, status=status.HTTP_200_OK)
 
 
 def send_question_to_user(question, user):

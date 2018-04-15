@@ -18,6 +18,7 @@ class QuestionAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     exclude = ('created_at', 'updated_at', 'answers',)
+    list_display = ('name', 'is_active', 'channel_id', 'slack_id',)
     formfield_overrides = {
         models.TextField: {'widget': forms.Textarea(attrs={'cols': 50, 'rows': 1})},
     }

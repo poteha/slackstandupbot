@@ -14,4 +14,4 @@ COPY . /opt/app/
 WORKDIR /opt/app
 
 ENV ENVIRONMENT=dev
-# pipenv run python manage.py runserver 0.0.0.0:3720 --settings slack.settings.dev
+CMD pipenv run python manage.py runserver 0.0.0.0:3720 --settings slack.settings.dev

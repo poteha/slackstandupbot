@@ -1,0 +1,36 @@
+service: startup-bot
+
+
+custom:
+  stage: "${opt:stage, self:provider.stage}"
+
+
+package:
+  individually: true
+  exclude:
+    - ./**
+  include:
+    - ./scheduler.py
+
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: dev
+
+  environment: ${file(./local.yml):${self:custom.stage}}
+  profile: ${file(./local.yml):aws_profile}
+  region: eu-west-1
+
+  versionFunctions: false
+  memorySize: 256
+  timeout: 30
+
+
+functions:
+  scheduler:
+    handler: scheduler.handler
+    events:
+      - schedule:
+          rate: cron(0 7 ? * MON-FRI *)
+          enabled: ${self:provider.environment.lambda_cron_trigger_enabled}

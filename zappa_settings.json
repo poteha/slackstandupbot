@@ -2,7 +2,8 @@
   "dev": {
     "django_settings": "slack.settings.dev",
     "aws_region": "eu-west-1",
-    "keep_warm": false,
+    "keep_warm": true,
+    "keep_warm_expression": "rate(1 hour)",
     "runtime": "python3.6",
     "s3_bucket": "zappa-poteha-slack-standup-bot",
     "lambda_description": "Slack Standup with love from POTEHA Devs team.",
@@ -13,7 +14,7 @@
     "log_level": "INFO",
     "events": [{
       "function": "standupbot.views.send_first_question_to_all_users",
-      "expression": "cron(0 7 ? * MON-FRI *)"
+      "expression": "cron(11 15 ? * MON-FRI *)"
     }]
   }
 }
