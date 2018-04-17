@@ -2,6 +2,8 @@ Simple daily standup async bot for remote teams who use Slack.
 --------
 Made with `Django`, `AWS Lambda` and [zappa](https://github.com/Miserlou/Zappa) framework.
 
+**You can now use Docker insted of Zappa**. Read below for instructions.
+
 #### How it looks like?
 Once a day a bot writes to selected members list of questions for standup.
 Users and questions configured in Admin interface.
@@ -92,8 +94,21 @@ dev:
 ## Deploy
 Be sure you have `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` environment variables set.
 
+#### Zappa
 To deploy a bot with Zappa just write `zappa deploy dev`. Zappa will create CloudFormation stack
 for you to manage all the infrastructure. When you need yo update you stack write `zappa update dev`.
+
+#### Docker
+You need to build Docker image with command `docker build -t your_tag_name .`. Then run container with command `docker run -p 3720:3720 your_tag_name` where 3720 is a default port in Docker file. You can change the port for any other. In order to use CRON to start standup, you need some trigger. The easiest solution is to make a simple Lambda function that will trigger bot's API. Take a look at `scheduler.py` file. You can use alternative schedulers but for Lambda you need to
+1. Create a file `local.yml` with content
+```
+dev:
+  SCHEDULER_URL: your_url
+```
+where `dev` is a name of the environment, `SCHEDULER_URL` is a URL that sends standup to all users. For current settings, it would look like `your_domain:3720/send_standup`.
+
+2. Tune CRON settings in `serverless.yml` file.
+3. Deploy Lambda with [Serverless framework](https://serverless.com/) `sls deploy`.
 
 
 ## Zappa settings
