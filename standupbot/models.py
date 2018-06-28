@@ -20,6 +20,7 @@ class AbstractModel(models.Model):
 class Question(AbstractModel):
     text = models.TextField()
     order_number = models.IntegerField(unique=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.text
@@ -29,7 +30,8 @@ class Question(AbstractModel):
         indexes = [
             models.Index(fields=['order_number']),
             models.Index(fields=['created_at']),
-            models.Index(fields=['updated_at'])
+            models.Index(fields=['updated_at']),
+            models.Index(fields=['is_active'])
         ]
 
 

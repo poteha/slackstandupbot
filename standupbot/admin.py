@@ -9,7 +9,7 @@ from .models import User, Question
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     exclude = ('created_at', 'updated_at',)
-    list_display = ('text', 'order_number',)
+    list_display = ('text', 'order_number', 'is_active',)
     formfield_overrides = {
         models.TextField: {'widget': forms.Textarea(attrs={'cols': 50, 'rows': 1})},
     }
