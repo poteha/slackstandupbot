@@ -40,11 +40,22 @@ def send_message(channel, text, attachments=None):
 @api_view(['GET'])
 def send_first_question_to_all_users(request):
     users = User.objects.filter(is_active=True)
-    first_question = Question.objects.order_by('order_number').first()
+    first_question = Question.objects.filter(is_active=True).order_by('order_number').first()
     for u in users:
         send_message(channel=u.channel_id, text=TEXT_NEW_DAY)
         send_message(channel=u.channel_id, text='*{}*'.format(first_question.text))
     return Response({'response': 'ok'}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def send_standup_reminder(request):
+    users = User.objects.filter(is_active=True)
+    # first_question = Question.objects.order_by('order_number').first()
+    # for u in users:
+    #     send_message(channel=u.channel_id, text=TEXT_NEW_DAY)
+    #     send_message(channel=u.channel_id, text='*{}*'.format(first_question.text))
+    # return Response({'response': 'ok'}, status=status.HTTP_200_OK)
+
 
 
 def send_question_to_user(question, user):
@@ -78,7 +89,7 @@ class Events(APIView):
         answer.save()
 
     def handle_answer_for_a_first_question(self, user, text):
-        question_query = Question.objects.order_by('order_number')
+        question_query = Question.objects.filter(is_active=True).order_by('order_number')
         first_question = question_query.first()
         self.create_answer(user, text, first_question)
 
@@ -90,7 +101,8 @@ class Events(APIView):
 
         # send next question
         question_query = Question.objects.filter(
-            order_number__gt=prev_question.order_number
+            order_number__gt=prev_question.order_number,
+            is_active=True
         ).order_by('order_number')
 
         question = question_query.first()
