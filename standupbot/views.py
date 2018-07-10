@@ -1,14 +1,13 @@
 import json
-
 import random
+
 from django.conf import settings
 from django.utils.timezone import datetime
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from slackclient import SlackClient
-from rest_framework.decorators import api_view
-
 
 from .models import Question, Answer, User
 
@@ -20,6 +19,8 @@ TEXT_STANDUP_IS_DONE = getattr(settings, 'TEXT_STANDUP_IS_DONE', None)
 TEXT_NO_USER = getattr(settings, 'TEXT_NO_USER', None)
 TEXT_CHANNEL_MESSAGE = getattr(settings, 'TEXT_CHANNEL_MESSAGE', None)
 TEXT_NEW_DAY = getattr(settings, 'TEXT_NEW_DAY', None)
+TEXT_REMINDER = getattr(settings, 'TEXT_REMINDER', None)
+IMAGE_REMINDER = getattr(settings, 'IMAGE_REMINDER', None)
 
 SLACK_SEND_IM_METHOD = 'chat.postMessage'
 
@@ -50,12 +51,19 @@ def send_first_question_to_all_users(request):
 @api_view(['GET'])
 def send_standup_reminder(request):
     users = User.objects.filter(is_active=True)
-    # first_question = Question.objects.order_by('order_number').first()
-    # for u in users:
-    #     send_message(channel=u.channel_id, text=TEXT_NEW_DAY)
-    #     send_message(channel=u.channel_id, text='*{}*'.format(first_question.text))
-    # return Response({'response': 'ok'}, status=status.HTTP_200_OK)
+    number_of_active_questions = Question.objects.filter(is_active=True).count()
+    today_date = datetime.today().date()
 
+    for u in users:
+        users_answers = Answer.objects.filter(user=u, date=today_date).count()
+        if users_answers < number_of_active_questions:
+            print("User {} haven't completed standup".format(u.name))
+            attachments = [{
+                'image_url': IMAGE_REMINDER
+            }]
+            print(attachments)
+            send_message(channel=u.channel_id, text=TEXT_REMINDER, attachments=attachments)
+    return Response({'response': 'ok'}, status=status.HTTP_200_OK)
 
 
 def send_question_to_user(question, user):
