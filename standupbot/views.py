@@ -103,6 +103,9 @@ class Events(APIView):
 
         if question_query.count() > 1:
             return question_query[1]
+        else:
+            send_message(user.channel_id, text=TEXT_STANDUP_IS_DONE)
+            send_answers_to_common_channels(user=user)
 
     def handle_middle_answer(self, latest_answer, user, text):
         prev_question = latest_answer.question
